@@ -90,6 +90,8 @@ function RichTextEditorInner(
     readOnly = false,
     autoFocus = false,
     minHeight = 200,
+    maxHeight,
+    height,
     disabled = false,
     showToolbar = true,
     className = '',
@@ -253,7 +255,12 @@ function RichTextEditorInner(
             contentEditable={
               <ContentEditable
                 className="rte-root"
-                style={{ minHeight: `${minHeight}px` }}
+                style={{ 
+                  minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight,
+                  maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight,
+                  height: typeof height === 'number' ? `${height}px` : height,
+                  overflowY: (maxHeight || height) ? 'auto' : undefined,
+                }}
                 aria-label="Rich text editor"
               />
             }

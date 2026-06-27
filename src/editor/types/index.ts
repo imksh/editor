@@ -39,7 +39,11 @@ export interface RichTextEditorProps extends RichTextEditorFeatures {
   /** Automatically focuses the editor on mount */
   autoFocus?: boolean;
   /** Minimum height of the editor content area in pixels */
-  minHeight?: number;
+  minHeight?: number | string;
+  /** Maximum height of the editor content area in pixels */
+  maxHeight?: number | string;
+  /** Fixed height of the editor content area in pixels */
+  height?: number | string;
   /** Disables the editor with a grayed-out appearance */
   disabled?: boolean;
   /** Show or hide the toolbar */

@@ -29,20 +29,9 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
       setUrl('');
       setAlt('');
       setError('');
-
-      // If drawer callback is provided, call it immediately and close dialog
-      if (hasDrawer) {
-        onClose(); // close our dialog
-        onOpenImageDrawer!((imageUrl: string) => {
-          if (imageUrl) {
-            onSubmit(imageUrl, '');
-          }
-        });
-      } else {
-        setTimeout(() => inputRef.current?.focus(), 50);
-      }
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [isOpen, hasDrawer, onOpenImageDrawer, onClose, onSubmit]);
+  }, [isOpen]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -66,8 +55,8 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
     [url, alt, onSubmit, onClose],
   );
 
-  // Don't render the dialog if using external drawer
-  if (!isOpen || hasDrawer) return null;
+  // Don't render the dialog if not open
+  if (!isOpen) return null;
 
   return (
     <div className="rte-dialog-overlay" onClick={onClose}>
@@ -122,6 +111,22 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
           </div>
 
           <div className="rte-dialog-actions">
+            {hasDrawer && (
+              <button
+                type="button"
+                className="rte-dialog-btn rte-dialog-btn--secondary"
+                onClick={() => {
+                  onOpenImageDrawer!((imageUrl: string) => {
+                    if (imageUrl) {
+                      onSubmit(imageUrl, alt.trim() || undefined);
+                      onClose();
+                    }
+                  });
+                }}
+              >
+                Upload File
+              </button>
+            )}
             <div className="rte-dialog-actions-right">
               <button type="button" className="rte-dialog-btn rte-dialog-btn--secondary" onClick={onClose}>
                 Cancel

@@ -10,6 +10,7 @@ import {
 import { mergeRegister } from '@lexical/utils';
 import { $isImageNode, type ImageAlignment } from '../nodes/ImageNode';
 import { AlignLeft, AlignCenter, AlignRight, Trash2, Image as ImageIcon } from 'lucide-react';
+import ImageDialog from '../components/ImageDialog';
 
 interface ImageActionMenuPluginProps {
   onOpenImageDrawer?: (callback: (url: string) => void) => void;
@@ -22,6 +23,7 @@ export default function ImageActionMenuPlugin({
   const [activeImageKey, setActiveImageKey] = useState<string | null>(null);
   const [alignment, setAlignment] = useState<ImageAlignment>('inline');
   const [position, setPosition] = useState({ top: -10000, left: -10000 });
+  const [showReplaceDialog, setShowReplaceDialog] = useState(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   const updatePosition = useCallback(() => {
@@ -110,40 +112,30 @@ export default function ImageActionMenuPlugin({
     });
   }, [editor, activeImageKey]);
 
-  const handleReplace = useCallback(() => {
-    if (onOpenImageDrawer) {
-      onOpenImageDrawer((url: string) => {
-        if (url && activeImageKey) {
-          editor.update(() => {
-            const node = $getNodeByKey(activeImageKey);
-            if ($isImageNode(node)) {
-              node.setSrc(url);
-            }
-          });
+  const handleReplaceSubmit = useCallback((url: string) => {
+    if (url && activeImageKey) {
+      editor.update(() => {
+        const node = $getNodeByKey(activeImageKey);
+        if ($isImageNode(node)) {
+          node.setSrc(url);
         }
       });
-    } else {
-      // Fallback to simple prompt if no drawer
-      const url = window.prompt('Enter new image URL:');
-      if (url && activeImageKey) {
-        editor.update(() => {
-          const node = $getNodeByKey(activeImageKey);
-          if ($isImageNode(node)) {
-            node.setSrc(url);
-          }
-        });
-      }
     }
-  }, [editor, activeImageKey, onOpenImageDrawer]);
+  }, [editor, activeImageKey]);
+
+  const handleReplace = useCallback(() => {
+    setShowReplaceDialog(true);
+  }, []);
 
   if (!activeImageKey || !editor.isEditable()) return null;
 
   return (
-    <div
-      ref={toolbarRef}
-      className="rte-floating-toolbar rte-image-floating-toolbar"
-      style={{ top: position.top, left: position.left, transform: 'translateX(-100%)' }}
-    >
+    <>
+      <div
+        ref={toolbarRef}
+        className="rte-floating-toolbar rte-image-floating-toolbar"
+        style={{ top: position.top, left: position.left, transform: 'translateX(-100%)' }}
+      >
       <button
         type="button"
         className={`rte-floating-toolbar-btn ${alignment === 'left' ? 'active' : ''}`}
@@ -186,5 +178,13 @@ export default function ImageActionMenuPlugin({
         <Trash2 size={16} />
       </button>
     </div>
+
+      <ImageDialog
+        isOpen={showReplaceDialog}
+        onClose={() => setShowReplaceDialog(false)}
+        onSubmit={handleReplaceSubmit}
+        onOpenImageDrawer={onOpenImageDrawer}
+      />
+    </>
   );
 }

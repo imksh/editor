@@ -79,7 +79,8 @@ export default function MyComponent() {
   image={false}
   codeBlock={false}
   // Styling
-  minHeight={500}
+  minHeight={300}
+  maxHeight={600} // Enables internal scroll with sticky toolbar
   className="my-editor"
 />
 ```
@@ -148,7 +149,9 @@ The editor also ships with screenshot assets in `docs/images` that you can use i
 | `placeholder`       | `string`                                    | `'Start writing...'` | Placeholder text when empty                         |
 | `readOnly`          | `boolean`                                   | `false`              | Read-only mode (disables editing and hides toolbar) |
 | `autoFocus`         | `boolean`                                   | `false`              | Auto-focus the editor on mount                      |
-| `minHeight`         | `number`                                    | `200`                | Minimum editor height in pixels                     |
+| `minHeight`         | `number \| string`                          | `200`                | Minimum editor height                               |
+| `maxHeight`         | `number \| string`                          | —                    | Maximum editor height (enables internal scroll)     |
+| `height`            | `number \| string`                          | —                    | Fixed editor height (enables internal scroll)       |
 | `disabled`          | `boolean`                                   | `false`              | Disable editing (grayed-out appearance)             |
 | `showToolbar`       | `boolean`                                   | `true`               | Show/hide the toolbar                               |
 | `className`         | `string`                                    | `''`                 | Additional CSS class on wrapper                     |
@@ -204,7 +207,8 @@ All features are **enabled by default**. Set any to `false` to disable it from t
 <RichTextEditor
   value={html}
   onChange={setHtml}
-  minHeight={600}
+  minHeight={300}
+  maxHeight={600}
   showToolbar={true}
   bold={true}
   italic={true}

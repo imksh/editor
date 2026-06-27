@@ -918,18 +918,21 @@
 
 /* ─── Dialog / Modal ────────────────────────────────────────────── */
 .rte-dialog-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 100;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  background: rgb(0 0 0 / 0.4);
-  backdrop-filter: blur(4px);
+  padding-top: 50px;
+  background: transparent;
+  backdrop-filter: none;
   animation: rte-fade-in 0.15s ease;
+  pointer-events: none;
 }
 
 .rte-dialog {
+  pointer-events: auto;
   width: 90%;
   max-width: 420px;
   background: var(--color-base-100, #ffffff);
